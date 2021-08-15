@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>My Todos</h1>
+  <div class="list-container">
+    <div class="list-item" *ngFor="let todo of this.todos">
+      <div class="item-name">{{ todo.name }}</div>
+      <button class="button" (click)="move(todo, this.direction.UP)">⬆</button>
+      <div class="button" (click)="move(todo, this.direction.DOWN)">⬇</div>
+      <div class="button" (click)="deleteTodo(todo)">❌</div>
+    </div>
+  </div>
+  <form class="input" (ngSubmit)="createTodo()">
+    <input
+      [ngClass]="{ error: this.errors }"
+      [(ngModel)]="this.todoInput"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <div class="button">Create</div>
+  </form>
+  <div class="button">Clear</div>
+</div>

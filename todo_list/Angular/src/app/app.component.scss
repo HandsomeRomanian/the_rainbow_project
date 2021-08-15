@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-grow: 1;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+h1 {
+  margin: 0px;
+}
+
+.container {
+  background-color: cadetblue;
+  padding: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.list-item {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0px;
+}
+
+.item-name {
+  margin-right: auto;
+}
+
+.input {
+  display: flex;
+  gap: 16px;
+}
+
+input.error {
+  border: 2px solid red !important;
+}
+
+.button {
+  background-color: white;
+  border-radius: 8px;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+}
