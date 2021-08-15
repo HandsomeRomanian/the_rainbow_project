@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        margin: 0px;
+      }
+      body {
+        height: 100vh;
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        background: rgb(247, 121, 125);
+        background: radial-gradient(
+          circle,
+          rgba(247, 121, 125, 1) 26%,
+          rgba(251, 215, 134, 1) 100%
+        );
+      }
+      .container {
+        display: flex;
+        flex-grow: 1;
+        gap: 20px;
+        flex-direction: column;
+        border-radius: 15px;
+        padding: 16px;
+        background: #4fb8c6;
+        background: radial-gradient(
+          circle,
+          rgba(79, 184, 198, 1) 30%,
+          rgba(71, 209, 225, 1) 100%
+        );
+      }
+      form {
+        display: flex;
+        gap: 16px;
+      }
+      .clear-button {
+        border-radius: 16px;
+        background-color: white;
+        padding: 5px 8px 5px 8px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .clear-button:active {
+        transform: translateY(4px);
+      }
+      #input {
+        border: none;
+        background-image: none;
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        outline: none;
+
+        background-color: white;
+        padding: 8px;
+        border-radius: 5px;
+      }
+      #list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .list-item {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        padding: 4px 16px;
+        background-color: rgba(255, 255, 255, 0.29);
+        border-radius: 5px;
+      }
+      .name {
+        margin-right: auto;
+      }
+      .icon {
+        margin: 0px 8px;
+        cursor: pointer;
+      }
+      input.error {
+        border: 1.5px solid red !important;
+      }
+    </style>
+    <title>Todo | The Rainbow Project</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>My todos</h1>
+      <div id="list-container"></div>
+      <form onsubmit="createTodo()" class="input-container">
+        <input id="input" type="text" />
+        <div class="clear-button" onclick="createTodo()">Create</div>
+      </form>
+      <div class="clear-button" onclick="clearTodos()">Clear</div>
+    </div>
+
+    <script>
+      var todos = JSON.parse(localStorage.getItem("list")) || [];
+      const listContainer = document.getElementById("list-container");
+      const input = document.getElementById("input");
+
+      function renderTodos() {
+        listContainer.innerHTML = "";
+        todos.forEach((todo) => {
+          const listItemContainer = document.createElement("div");
+          listItemContainer.classList.add("list-item");
+          const name = document.createElement("h2");
+          name.innerHTML = todo.name;
+          name.classList.add("name");
+          const up = document.createElement("div");
+          up.classList.add("icon");
+          up.innerText = "^";
+          up.onclick = () => {
+            upTodo(todo);
+          };
+          const down = document.createElement("div");
+          down.classList.add("icon");
+          down.innerText = "v";
+          down.onclick = () => {
+            downTodo(todo);
+          };
+          const deletebut = document.createElement("div");
+          deletebut.classList.add("icon");
+          deletebut.classList.add("delete");
+          deletebut.innerHTML = "X";
+          deletebut.onclick = () => {
+            removeTodo(todo);
+          };
+          listItemContainer.append(...[name, up, down, deletebut]);
+          listContainer.appendChild(listItemContainer);
+        });
+      }
+
+      function createTodo() {
+        event.preventDefault();
+        input.classList.remove("error");
+        if (
+          input.value.trim() === "" ||
+          todos.find((x) => x.name.toLowerCase() === input.value.toLowerCase())
+        ) {
+          input.classList.add("error");
+          return;
+        }
+        todos.push({ name: input.value });
+        input.value = "";
+        localStorage.setItem("list", JSON.stringify(todos));
+        renderTodos();
+      }
+
+      function upTodo(todo) {
+        const prev = todos[todos.indexOf(todo) - 1];
+        if (prev) {
+          const current = todos[todos.indexOf(todo)];
+          const prevIndex = todos.indexOf(todo) - 1;
+          const index = todos.indexOf(todo);
+          todos[prevIndex] = current;
+          todos[index] = prev;
+        }
+        renderTodos();
+        localStorage.setItem("list", JSON.stringify(todos));
+      }
+
+      function downTodo(todo) {
+        const next = todos[todos.indexOf(todo) + 1];
+        if (next) {
+          const current = todos[todos.indexOf(todo)];
+          const nextIndex = todos.indexOf(todo) + 1;
+          const index = todos.indexOf(todo);
+          todos[nextIndex] = current;
+          todos[index] = next;
+        }
+        renderTodos();
+        localStorage.setItem("list", JSON.stringify(todos));
+      }
+
+      function removeTodo(todo) {
+        todos.splice(todos.indexOf(todos.find((x) => x.name === todo.name)), 1);
+        renderTodos();
+      }
+
+      function clearTodos() {
+        todos = [];
+        localStorage.setItem("list", JSON.stringify(todos));
+        renderTodos();
+      }
+
+      renderTodos();
+
+      class Todo {
+        name;
+      }
+    </script>
+  </body>
+</html>
